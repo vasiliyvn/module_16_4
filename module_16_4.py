@@ -19,15 +19,14 @@ async def get_users() -> List[User]:
 
 
 @app.post('/user/{username}/{age}')
-async def create_user(username: Annotated[str, Path(min_length=5, max_length=20,
+async def create_user(user: User, username: Annotated[str, Path(min_length=5, max_length=20,
                                                     description='Enter username', example='Vasya_User')],
                       age: int = Path(ge=18, le=120, description='Enter age', example=36)) -> List[User]:
-    user_id = len(users)
-    if user_id < 1:
-        user_id = 1
+    if len(users) ==0:
+        user.id = 1
     else:
-        user_id += 1
-    user = User(id=user_id, username=username, age=age)
+        user.id = users[len(users)-1].id+1
+    user = User(id=user.id, username=username, age=age)
     users.append(user)
     return users
 
